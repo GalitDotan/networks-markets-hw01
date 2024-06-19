@@ -13,7 +13,7 @@ import random
 # please contact us before submission if you want another package approved.
 import matplotlib.pyplot as plt
 
-INFINITY = int(float('inf'))
+INFINITE_DISTANCE = -1
 
 
 class Color:
@@ -85,7 +85,7 @@ def shortest_path(G: UndirectedGraph, i: int, j: int):
 
     for u in range(n):
         color[u] = Color.WHITE
-        d[u] = INFINITY
+        d[u] = INFINITE_DISTANCE
         parent[u] = None
 
     color[i] = Color.GRAY
@@ -103,9 +103,6 @@ def shortest_path(G: UndirectedGraph, i: int, j: int):
                 parent[v] = u
                 queue.append(v)
         color[u] = Color.BLACK
-
-    if d[j] == INFINITY:
-        return -1
     return d[j]
 
 
