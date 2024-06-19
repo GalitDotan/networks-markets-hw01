@@ -49,16 +49,16 @@ class UndirectedGraph:
 
 
 # Problem 9(a)
-def create_graph(n, p):
-    ''' Given number of nodes n and probability p, output an UndirectedGraph with n nodes, where each
-    pair of nodes is connected by an edge with probability p'''
-    G = UndirectedGraph(n)
-    # run over all possible edges
-    for nodeA in range(n):
+def create_graph(n: int, p: int):
+    """ Given number of nodes n and probability p, output an UndirectedGraph with n nodes, where each
+    pair of nodes is connected by an edge with probability p"""
+    graph = UndirectedGraph(n)
+    # run over all pairs of nodes
+    for nodeA in range(n - 1):
         for nodeB in range(nodeA + 1, n):
-            if random.random() < p:  # add an edge in probability p
-                G.add_edge(nodeA, nodeB)
-    return G
+            if random.random() < p:  # add an edge with probability p
+                graph.add_edge(nodeA, nodeB)
+    return graph
 
 
 # Problem 9(b)
