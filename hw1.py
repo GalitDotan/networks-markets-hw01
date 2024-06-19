@@ -107,7 +107,7 @@ def shortest_path(G: UndirectedGraph, i: int, j: int):
 
 
 # Problem 9(c)
-def avg_shortest_path(G, num_samples=1000):
+def avg_shortest_path(G: UndirectedGraph, num_samples: int = 1000):
     """ Given an UndirectedGraph G, return an estimate of the average shortest path in G, where the average is taken
     over all pairs of CONNECTED nodes. The estimate should be taken by sampling num_samples random pairs of connected nodes, 
     and computing the average of their shortest paths. Return a decimal number."""
@@ -115,8 +115,7 @@ def avg_shortest_path(G, num_samples=1000):
     sum_of_distance = 0
     i = 0
     while i < num_samples:
-        node1 = random.randint(0, n - 1)
-        node2 = random.randint(0, n - 1)
+        node1, node2 = random.sample(range(n), 2)
         shortest_distance = shortest_path(G, node1, node2)
         if shortest_distance <= 0:  # check if pair is connected
             continue
