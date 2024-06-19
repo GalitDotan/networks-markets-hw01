@@ -117,9 +117,10 @@ def avg_shortest_path(G, num_samples=1000):
     while i < num_samples:
         node1 = random.randint(0, n - 1)
         node2 = random.randint(0, n - 1)
-        if node1 == node2 or not G.check_edge(node1, node2):
+        shortest_distance = shortest_path(G, node1, node2)
+        if shortest_distance <= 0:  # check if pair is connected
             continue
-        sum_of_distance += shortest_path(G, node1, node2)
+        sum_of_distance += shortest_distance
         i += 1
     return sum_of_distance / num_samples  # average
 
