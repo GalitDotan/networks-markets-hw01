@@ -80,30 +80,30 @@ def shortest_path(G: UndirectedGraph, i: int, j: int):
     # init
     n = G.number_of_nodes()
     color: dict[int, str] = {}  # used to track which nodes were already visited
-    d: dict[int, int] = {}  # minimal distance from i to each node
+    distance: dict[int, int] = {}  # minimal distance from i to each node
     parent: dict[int, int] = {}  # parent of each node in the BFS
 
-    for u in range(n):
-        color[u] = Color.WHITE
-        d[u] = INFINITE_DISTANCE
-        parent[u] = None
+    for node in range(n):
+        color[node] = Color.WHITE
+        distance[node] = INFINITE_DISTANCE
+        parent[node] = None
 
     color[i] = Color.GRAY
-    d[i] = 0
+    distance[i] = 0
 
     queue: list[int] = [i]
 
     # ssearch the shortest path
     while len(queue) > 0:
-        u = queue.pop(0)
-        for v in G.edges_from(u):
-            if color[v] == Color.WHITE:
-                color[v] = Color.GRAY
-                d[v] = d[u] + 1
-                parent[v] = u
-                queue.append(v)
-        color[u] = Color.BLACK
-    return d[j]
+        node1 = queue.pop(0)
+        for node2 in G.edges_from(node1):
+            if color[node2] == Color.WHITE:
+                color[node2] = Color.GRAY
+                distance[node2] = distance[node1] + 1
+                parent[node2] = node1
+                queue.append(node2)
+        color[node1] = Color.BLACK
+    return distance[j]
 
 
 # Problem 9(c)
