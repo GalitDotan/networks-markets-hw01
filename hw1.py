@@ -17,35 +17,35 @@ import matplotlib.pyplot as plt
 # Implement the methods in this class as appropriate. Feel free to add other methods
 # and attributes as needed. 
 class UndirectedGraph:
-    def __init__(self, number_of_nodes):
-        '''Assume that nodes are represented by indices/integers between 0 and number_of_nodes - 1.'''
-        self.nodes_num = number_of_nodes
-        # graph: is a dictonary,
+    def __init__(self, number_of_nodes: int):
+        """Assume that nodes are represented by indices/integers between 0 and (number_of_nodes - 1)."""
+        self._nodes_num = number_of_nodes
+        # graph: is a dictionary,
         # keys are the nodes, 
         # values are set of nodes with edge to key node
-        self.graph = {i: set() for i in range(number_of_nodes)}
+        self._adjacency_set = {i: set() for i in range(number_of_nodes)}
 
-    def add_edge(self, nodeA, nodeB):
-        ''' Adds an undirected edge to the graph, between nodeA and nodeB. Order of arguments should not matter'''
-        if nodeA >= self.nodes_num or nodeB >= self.nodes_num:  # check if nodes exist in graph
-            print("node out of range")
-            return
+    def add_edge(self, nodeA: int, nodeB: int):
+        """ Adds an undirected edge to the graph, between nodeA and nodeB. Order of arguments should not matter"""
+        if nodeA >= self._nodes_num or nodeB >= self._nodes_num:  # check if nodes exist in graph
+            return  # at least one of the nodes is out of range. do nothing
         # add an edge
-        self.graph[nodeA].add(nodeB)
-        self.graph[nodeB].add(nodeA)
+        self._adjacency_set[nodeA].add(nodeB)
+        self._adjacency_set[nodeB].add(nodeA)
 
-    def edges_from(self, nodeA):
-        ''' This method shold return a list of all the nodes nodeB such that nodeA and nodeB are 
-        connected by an edge'''
-        return list(self.graph[nodeA])
+    def edges_from(self, nodeA: int):
+        """ This method should return a list of all the nodes nodeB such that nodeA and nodeB are
+        connected by an edge"""
+        return list(self._adjacency_set[nodeA])
 
-    def check_edge(self, nodeA, nodeB):
-        ''' This method should return true is there is an edge between nodeA and nodeB, and false otherwise'''
-        return nodeA in self.graph[nodeB]
+    def check_edge(self, nodeA: int, nodeB: int) -> bool:
+        """ This method should return true is there is an edge between nodeA and nodeB, and false otherwise"""
+        # note: since graph is undirected, if there exists (a,b), there must exist (b, a) - so it's enough to chck one
+        return nodeA in self._adjacency_set[nodeB]
 
-    def number_of_nodes(self):
-        ''' This method should return the number of nodes in the graph'''
-        return self.nodes_num
+    def number_of_nodes(self) -> int:
+        """ This method should return the number of nodes in the graph"""
+        return self._nodes_num
 
 
 # Problem 9(a)
