@@ -13,6 +13,15 @@ import random
 # please contact us before submission if you want another package approved.
 import matplotlib.pyplot as plt
 
+NO_PATH_FOUND_OUTPUT = -1
+INFINITY = int(float('inf'))
+
+
+class Color:
+    WHITE = 'WHITE'
+    GRAY = 'GRAY'
+    BLACK = 'BLACK'
+
 
 # Implement the methods in this class as appropriate. Feel free to add other methods
 # and attributes as needed. 
@@ -62,24 +71,39 @@ def create_graph(n: int, p: int):
 
 
 # Problem 9(b)
-def shortest_path(G, i, j):
-    ''' Given an UndirectedGraph G and nodes i,j, output the length of the shortest path between i and j in G.
-    If i and j are disconnected, output -1.'''
+def shortest_path(G: UndirectedGraph, i: int, j: int):
+    """ Given an UndirectedGraph G and nodes i,j, output the length of the shortest path between nodes i and j in G.
+    If i and j are disconnected, output -1."""
+    # init
     n = G.number_of_nodes()
-    distance = -1  # distance of the shortest path between i and j
-    nodes = [("unvisited", n + 1, None) for t in range(n)]  # list of all nodes attribute,"nodes are index"
-    nodes[i] = ("visited", 0, None)  # init starting node
-    bfs_queue = [i]  # init queue for the bfs
-    while bfs_queue:
-        current_node = bfs_queue.pop(0)  # pop the head of the queue
-        if current_node == j:  # check if j node is reached
-            distance = nodes[j][1]
-        neighbors = G.edges_from(current_node)  # get the neighbors
-        for neighbor in neighbors:
-            if nodes[neighbor][0] == "unvisited":  # check if visited
-                nodes[neighbor] = (("visited", nodes[current_node][1] + 1, current_node))  # update attribute
-                bfs_queue.append(neighbor)  # add to end of queue
-    return distance
+    color: dict[int, str] = {}  # used to track which nodes were already visited
+    d: dict[int, int] = {}  # minimal distance from i to each node
+    parent: dict[int, int] = {}  # parent of each node in the BFS
+
+    for u in range(n):
+        color[u] = Color.WHITE
+        d[u] = INFINITY
+        parent[u] = None
+
+    color[i] = Color.GRAY
+    d[i] = 0
+
+    queue: list[int] = [i]
+
+    # ssearch the shortest path
+    while len(queue) > 0:
+        u = queue.pop(0)
+        for v in G.edges_from(u):
+            if color[v] == Color.WHITE:
+                color[v] = Color.GRAY
+                d[v] = d[u] + 1
+                parent[v] = u
+                queue.append(v)
+        color[u] = Color.BLACK
+
+    if d[j] == INFINITY:
+        return NO_PATH_FOUND_OUTPUT
+    return d[j]
 
 
 # Problem 9(c)
