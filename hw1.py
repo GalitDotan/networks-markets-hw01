@@ -13,7 +13,6 @@ import random
 # please contact us before submission if you want another package approved.
 import matplotlib.pyplot as plt
 
-NO_PATH_FOUND_OUTPUT = -1
 INFINITY = int(float('inf'))
 
 
@@ -37,7 +36,11 @@ class UndirectedGraph:
     def add_edge(self, nodeA: int, nodeB: int):
         """ Adds an undirected edge to the graph, between nodeA and nodeB. Order of arguments should not matter"""
         if nodeA >= self._nodes_num or nodeB >= self._nodes_num:  # check if nodes exist in graph
-            return  # at least one of the nodes is out of range. do nothing
+            raise ValueError(
+                f'At least one of the nodes is out of range. Received: ({nodeA}, {nodeB}). '
+                f'Expected values are from 0 to {self._nodes_num}')
+        if nodeA == nodeB:
+            raise ValueError(f'Received the same node twice: {nodeA}')
         # add an edge
         self._adjacency_set[nodeA].add(nodeB)
         self._adjacency_set[nodeB].add(nodeA)
@@ -102,74 +105,75 @@ def shortest_path(G: UndirectedGraph, i: int, j: int):
         color[u] = Color.BLACK
 
     if d[j] == INFINITY:
-        return NO_PATH_FOUND_OUTPUT
+        return -1
     return d[j]
 
 
 # Problem 9(c)
 def avg_shortest_path(G, num_samples=1000):
-    ''' Given an UndirectedGraph G, return an estimate of the average shortest path in G, where the average is taken
+    """ Given an UndirectedGraph G, return an estimate of the average shortest path in G, where the average is taken
     over all pairs of CONNECTED nodes. The estimate should be taken by sampling num_samples random pairs of connected nodes, 
-    and computing the average of their shortest paths. Return a decimal number.'''
+    and computing the average of their shortest paths. Return a decimal number."""
     n = G.number_of_nodes()
     sum_of_distance = 0
     i = 0
     while i < num_samples:
         node1 = random.randint(0, n - 1)
         node2 = random.randint(0, n - 1)
-        shortest_distance = shortest_path(G, node1, node2)
-        if shortest_distance <= 0:  # check if pair is connected
+        if node1 == node2 or not G.check_edge(node1, node2):
             continue
-        sum_of_distance += shortest_distance
+        sum_of_distance += shortest_path(G, node1, node2)
         i += 1
-    return sum_of_distance / num_samples  # return average
+    return sum_of_distance / num_samples  # average
 
 
 # Problem 10(a)
 def create_fb_graph(filename="facebook_combined.txt"):
-    ''' This method should return a undirected version of the facebook graph as an instance of the UndirectedGraph class.
-    You may assume that the input graph has 4039 nodes.'''
+    """ This method should return an undirected version of the
+    facebook graph as an instance of the UndirectedGraph class.
+    You may assume that the input graph has 4039 nodes."""
     fb_G = UndirectedGraph(4039)
     for line in open(filename):
-        edge = line.split(" ")
-        fb_G.add_edge(int(edge[0]), int(edge[1]))
+        u, v = line.split(" ")
+        fb_G.add_edge(int(u), int(v))
     return fb_G
 
 
-# Please include any additional code you use for analysis, or to generate graphs, here.
-# Problem 9(c) if applicable.
-G_9c = create_graph(n=1000, p=0.1)
-print("9c answer:")
-print(avg_shortest_path(G=G_9c))
-# Problem 9(d)
-X = []
-Y = []
-for i in range(1, 5):
-    print(i)
-    p = i / 100
-    G_9d = create_graph(1000, p)
-    X.append(p)
-    Y.append(avg_shortest_path(G=G_9d))
-for i in range(5, 51, 5):
-    print(i)
-    p = i / 100
-    G_9d = create_graph(1000, p)
-    X.append(p)
-    Y.append(avg_shortest_path(G=G_9d))
-print(X)
-print(Y)
-plt.plot(X, Y)
-plt.xlabel('p')
-plt.ylabel('Average shortest path')
-plt.show()
-# Problem 10(b)
-G_fb = create_fb_graph()
-print("10b answer:")
-print(avg_shortest_path(G=G_fb))
-# Problem 10(c) if applicable.
-G_tp = create_graph(4039, 0.001)
-print(avg_shortest_path(G=G_tp))
-# Problem 10(d) if applicable.
-G_tp = create_graph(4039, 0.0028)
-print("10d answer")
-print(avg_shortest_path(G=G_tp))
+def run():
+    # Please include any additional code you use for analysis, or to generate graphs, here.
+    # Problem 9(c) if applicable.
+    G_9c = create_graph(n=1000, p=0.1)
+    print("9c answer:")
+    print(avg_shortest_path(G=G_9c))
+    # Problem 9(d)
+    X = []
+    Y = []
+    for i in range(1, 5):
+        print(i)
+        p = i / 100
+        G_9d = create_graph(1000, p)
+        X.append(p)
+        Y.append(avg_shortest_path(G=G_9d))
+    for i in range(5, 51, 5):
+        print(i)
+        p = i / 100
+        G_9d = create_graph(1000, p)
+        X.append(p)
+        Y.append(avg_shortest_path(G=G_9d))
+    print(X)
+    print(Y)
+    plt.plot(X, Y)
+    plt.xlabel('p')
+    plt.ylabel('Average shortest path')
+    plt.show()
+    # Problem 10(b)
+    G_fb = create_fb_graph()
+    print("10b answer:")
+    print(avg_shortest_path(G=G_fb))
+    # Problem 10(c) if applicable.
+    G_tp = create_graph(4039, 0.001)
+    print(avg_shortest_path(G=G_tp))
+    # Problem 10(d) if applicable.
+    G_tp = create_graph(4039, 0.0028)
+    print("10d answer")
+    print(avg_shortest_path(G=G_tp))
