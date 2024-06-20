@@ -78,6 +78,9 @@ def shortest_path(G: UndirectedGraph, i: int, j: int):
     """ Given an UndirectedGraph G and nodes i,j, output the length of the shortest path between nodes i and j in G.
     If i and j are disconnected, output -1."""
     # init
+    if i == j:
+        return 0
+
     n = G.number_of_nodes()
     color: dict[int, str] = {}  # used to track which nodes were already visited
     distance: dict[int, int] = {}  # minimal distance from i to each node
