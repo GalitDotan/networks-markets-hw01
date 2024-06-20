@@ -6,7 +6,7 @@ import hw1
 # to make sure the code is correct.
 # You should put the two python files in the same folder and run this one
 
-def testNumberOfNodes():
+def test_number_of_nodes():
     n5 = 5
     n0 = 0
     graph = hw1.UndirectedGraph(n5)
@@ -15,7 +15,7 @@ def testNumberOfNodes():
     assert graph.number_of_nodes() == n0
 
 
-def testEmptyGraph():
+def test_empty_graph():
     n = 10
     graph = hw1.UndirectedGraph(n)
     assert graph.number_of_nodes() == n
@@ -62,9 +62,9 @@ def test_avg_shortest_path(n):
 
     half_n = int(n / 2)
     test_graph = hw1.UndirectedGraph(n)
-    for i in range(n-1):
-        test_graph.add_edge(i, i+1)
-    assert (hw1.avg_shortest_path(test_graph) - (n + 1)/3) < 0.5 #since it's just a sample
+    for i in range(n - 1):
+        test_graph.add_edge(i, i + 1)
+    assert (hw1.avg_shortest_path(test_graph) - (n + 1) / 3) < 0.5  # since it's just a sample
     print("tested avg_shortest_path function")
 
 
@@ -78,44 +78,45 @@ def test_shortest_path(n):
             j += 1
     assert hw1.shortest_path(test_graph, n - 1, 0) == -1
 
-    half_n = int(n/2)
+    half_n = int(n / 2)
     # disconnected graph
     for i in range(half_n):
-        test_graph.add_edge(i, i+1)
+        test_graph.add_edge(i, i + 1)
 
-    for i in range(half_n+1):
+    for i in range(half_n + 1):
         assert hw1.shortest_path(test_graph, 0, i) == i
-    for i in range(half_n+1, n):
+    for i in range(half_n + 1, n):
         assert hw1.shortest_path(test_graph, 0, i) == -1
     # line
-    for i in range(n-1):
-        test_graph.add_edge(i, i+1)
-    for i in range(n-1):
+    for i in range(n - 1):
+        test_graph.add_edge(i, i + 1)
+    for i in range(n - 1):
         assert hw1.shortest_path(test_graph, i, i + 1) == 1
-    i3 = int(n/3)
-    assert hw1.shortest_path(test_graph, half_n, i3) == (half_n-i3)
+    i3 = int(n / 3)
+    assert hw1.shortest_path(test_graph, half_n, i3) == (half_n - i3)
     # cycle
-    test_graph.add_edge(0, n-1)
-    for i in range(n-2):
+    test_graph.add_edge(0, n - 1)
+    for i in range(n - 2):
         assert hw1.shortest_path(test_graph, i, i + 1) == 1
     assert hw1.shortest_path(test_graph, 0, i3) == i3
     assert hw1.shortest_path(test_graph, 0, half_n) == half_n
-    assert hw1.shortest_path(test_graph, 0, n-i3) == i3
+    assert hw1.shortest_path(test_graph, 0, n - i3) == i3
     print("tested test_shortest_path")
 
-def test_create_graph_with_P(n, p):
+
+def test_create_graph_with_p(n, p):
     testGraph2 = hw1.create_graph(n, p)
     outboundNode1List = testGraph2.edges_from(1)
     assert len(
         outboundNode1List) > 2  # With very, very small probability this test will fail even for correct implementation
 
 
-testNumberOfNodes();
-testEmptyGraph()
+test_number_of_nodes()
+test_empty_graph()
 test_edges_from_and_check_edge()
 test_shortest_path(10)
 test_avg_shortest_path(10)
-test_create_graph_with_P(100, 0.5)
+test_create_graph_with_p(100, 0.5)
 
 # Now, assuming that facebook_combined.txt is in the same directory as tester.py
 testFbGraph = hw1.create_fb_graph("facebook_combined.txt")
