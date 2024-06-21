@@ -24,7 +24,7 @@ def test_empty_graph():
     for i in range(n):
         for j in range(n):
             if i != j:
-                assert graph.check_edge(i, j) == False
+                assert not graph.check_edge(i, j)
         assert len(graph.edges_from(i)) == 0
     print("tested empty graph")
 
@@ -38,8 +38,8 @@ def test_edges_from_and_check_edge():
         graph.add_edge(1, i)
     for i in [0, 2, 3, 4]:
         assert len(graph.edges_from(i)) == 1
-        assert graph.check_edge(i, 1) == True
-        assert graph.check_edge(1, i) == True
+        assert graph.check_edge(i, 1)
+        assert graph.check_edge(1, i)
     assert len(graph.edges_from(1)) == 4
     graph.add_edge(0, 4)
     assert len(graph.edges_from(0)) == 2
@@ -47,9 +47,9 @@ def test_edges_from_and_check_edge():
     assert len(graph.edges_from(2)) == 1
     assert len(graph.edges_from(3)) == 1
     assert len(graph.edges_from(1)) == 4
-    assert graph.check_edge(2, 3) == False
-    assert graph.check_edge(3, 4) == False
-    assert graph.check_edge(0, 3) == False
+    assert not graph.check_edge(2, 3)
+    assert not graph.check_edge(3, 4)
+    assert not graph.check_edge(0, 3)
     print("tested edge_from function, check_edge function")
 
 
@@ -76,10 +76,8 @@ def test_shortest_path(num_of_nodes: int):
     # empty graph
     test_graph = hw1.UndirectedGraph(num_of_nodes)
     for i in range(num_of_nodes - 1):
-        j = i + 1
-        while j < num_of_nodes:
+        for j in range(i + 1, num_of_nodes):
             assert hw1.shortest_path(test_graph, i, j) == -1
-            j += 1
     assert hw1.shortest_path(test_graph, num_of_nodes - 1, 0) == -1
 
     half_n = int(num_of_nodes / 2)
@@ -91,6 +89,7 @@ def test_shortest_path(num_of_nodes: int):
         assert hw1.shortest_path(test_graph, 0, i) == i
     for i in range(half_n + 1, num_of_nodes):
         assert hw1.shortest_path(test_graph, 0, i) == -1
+
     # line
     for i in range(num_of_nodes - 1):
         test_graph.add_edge(i, i + 1)
@@ -98,6 +97,7 @@ def test_shortest_path(num_of_nodes: int):
         assert hw1.shortest_path(test_graph, i, i + 1) == 1
     i3 = int(num_of_nodes / 3)
     assert hw1.shortest_path(test_graph, half_n, i3) == (half_n - i3)
+
     # cycle
     test_graph.add_edge(0, num_of_nodes - 1)
     for i in range(num_of_nodes - 2):
