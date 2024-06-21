@@ -61,7 +61,7 @@ class UndirectedGraph:
 
 
 # Problem 9(a)
-def create_graph(n: int, p: int):
+def create_graph(n: int, p: float):
     """ Given number of nodes n and probability p, output an UndirectedGraph with n nodes, where each
     pair of nodes is connected by an edge with probability p"""
     graph = UndirectedGraph(n)
@@ -139,41 +139,46 @@ def create_fb_graph(filename="facebook_combined.txt"):
     return fb_G
 
 
-def run():
-    # Please include any additional code you use for analysis, or to generate graphs, here.
-    # Problem 9(c) if applicable.
+def question_9c():
     G_9c = create_graph(n=1000, p=0.1)
-    print("9c answer:")
-    print(avg_shortest_path(G=G_9c))
-    # Problem 9(d)
-    X = []
-    Y = []
+    print(f"9c answer:{avg_shortest_path(G=G_9c)}")
+
+
+def question_9d():
+    x = []
+    y = []
     for i in range(1, 5):
         print(i)
         p = i / 100
         G_9d = create_graph(1000, p)
-        X.append(p)
-        Y.append(avg_shortest_path(G=G_9d))
+        x.append(p)
+        y.append(avg_shortest_path(G=G_9d))
     for i in range(5, 51, 5):
         print(i)
         p = i / 100
         G_9d = create_graph(1000, p)
-        X.append(p)
-        Y.append(avg_shortest_path(G=G_9d))
-    print(X)
-    print(Y)
-    plt.plot(X, Y)
+        x.append(p)
+        y.append(avg_shortest_path(G=G_9d))
+    print(x)
+    print(y)
+    plt.plot(x, y)
     plt.xlabel('p')
     plt.ylabel('Average shortest path')
     plt.show()
-    # Problem 10(b)
+
+
+def question_10b():
     G_fb = create_fb_graph()
     print("10b answer:")
     print(avg_shortest_path(G=G_fb))
-    # Problem 10(c) if applicable.
+
+
+def question_10c():
     G_tp = create_graph(4039, 0.001)
     print(avg_shortest_path(G=G_tp))
-    # Problem 10(d) if applicable.
+
+
+def question_10d():
     G_tp = create_graph(4039, 0.0028)
     print("10d answer")
     print(avg_shortest_path(G=G_tp))
