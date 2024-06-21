@@ -145,23 +145,18 @@ def question_9c():
 
 
 def question_9d():
-    x = []
-    y = []
-    for i in range(1, 5):
-        print(i)
-        p = i / 100
-        G_9d = create_graph(1000, p)
-        x.append(p)
-        y.append(avg_shortest_path(G=G_9d))
-    for i in range(5, 51, 5):
-        print(i)
-        p = i / 100
-        G_9d = create_graph(1000, p)
-        x.append(p)
-        y.append(avg_shortest_path(G=G_9d))
-    print(x)
-    print(y)
-    plt.plot(x, y)
+    x_probabilities = []
+    y_avg_shortest_path = []
+    probability_ranges = [[i / 100 for i in range(1, 5)],
+                          [i / 100 for i in range(5, 51, 5)]]
+    for probability_range in probability_ranges:
+        for p in probability_range:
+            graph = create_graph(1000, p)
+            x_probabilities.append(p)
+            y_avg_shortest_path.append(avg_shortest_path(G=graph))
+    print(x_probabilities)
+    print(y_avg_shortest_path)
+    plt.plot(x_probabilities, y_avg_shortest_path)
     plt.xlabel('p')
     plt.ylabel('Average shortest path')
     plt.show()
