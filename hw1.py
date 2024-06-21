@@ -169,11 +169,18 @@ def question_10b():
 
 
 def question_10c():
-    G_tp = create_graph(4039, 0.001)
-    print(avg_shortest_path(G=G_tp))
+    G_fb = create_fb_graph()
+    n = G_fb.number_of_nodes()
+    cnt = 0
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            if G_fb.check_edge(i, j):
+                cnt += 1
+    max_num_of_edges = n * (n - 1) / 2
+    return cnt / max_num_of_edges
 
 
 def question_10d():
-    G_tp = create_graph(4039, 0.0028)
+    G_tp = create_graph(4039, 0.010819963503439287)
     print("10d answer")
     print(avg_shortest_path(G=G_tp))
