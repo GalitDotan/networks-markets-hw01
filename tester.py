@@ -1,3 +1,5 @@
+import pytest
+
 import hw1
 
 
@@ -51,7 +53,8 @@ def test_edges_from_and_check_edge():
     print("tested edge_from function, check_edge function")
 
 
-def test_avg_shortest_path(n):
+@pytest.mark.parametrize("num_of_nodes", [10])
+def test_avg_shortest_path(num_of_nodes):
     test_graph = hw1.UndirectedGraph(3)
     assert test_graph.number_of_nodes() == 3
     test_graph.add_edge(0, 1)
@@ -60,68 +63,62 @@ def test_avg_shortest_path(n):
     assert avg > 1.2  # Should be close to true value of 1.3333
     assert avg < 1.5  # Should be close to true value of 1.3333
 
-    half_n = int(n / 2)
-    test_graph = hw1.UndirectedGraph(n)
-    for i in range(n - 1):
+    half_n = int(num_of_nodes / 2)
+    test_graph = hw1.UndirectedGraph(num_of_nodes)
+    for i in range(num_of_nodes - 1):
         test_graph.add_edge(i, i + 1)
-    assert (hw1.avg_shortest_path(test_graph) - (n + 1) / 3) < 0.5  # since it's just a sample
+    assert (hw1.avg_shortest_path(test_graph) - (num_of_nodes + 1) / 3) < 0.5  # since it's just a sample
     print("tested avg_shortest_path function")
 
 
-def test_shortest_path(n):
+@pytest.mark.parametrize("num_of_nodes", [10])
+def test_shortest_path(num_of_nodes: int):
     # empty graph
-    test_graph = hw1.UndirectedGraph(n)
-    for i in range(n - 1):
+    test_graph = hw1.UndirectedGraph(num_of_nodes)
+    for i in range(num_of_nodes - 1):
         j = i + 1
-        while j < n:
+        while j < num_of_nodes:
             assert hw1.shortest_path(test_graph, i, j) == -1
             j += 1
-    assert hw1.shortest_path(test_graph, n - 1, 0) == -1
+    assert hw1.shortest_path(test_graph, num_of_nodes - 1, 0) == -1
 
-    half_n = int(n / 2)
+    half_n = int(num_of_nodes / 2)
     # disconnected graph
     for i in range(half_n):
         test_graph.add_edge(i, i + 1)
 
     for i in range(half_n + 1):
         assert hw1.shortest_path(test_graph, 0, i) == i
-    for i in range(half_n + 1, n):
+    for i in range(half_n + 1, num_of_nodes):
         assert hw1.shortest_path(test_graph, 0, i) == -1
     # line
-    for i in range(n - 1):
+    for i in range(num_of_nodes - 1):
         test_graph.add_edge(i, i + 1)
-    for i in range(n - 1):
+    for i in range(num_of_nodes - 1):
         assert hw1.shortest_path(test_graph, i, i + 1) == 1
-    i3 = int(n / 3)
+    i3 = int(num_of_nodes / 3)
     assert hw1.shortest_path(test_graph, half_n, i3) == (half_n - i3)
     # cycle
-    test_graph.add_edge(0, n - 1)
-    for i in range(n - 2):
+    test_graph.add_edge(0, num_of_nodes - 1)
+    for i in range(num_of_nodes - 2):
         assert hw1.shortest_path(test_graph, i, i + 1) == 1
     assert hw1.shortest_path(test_graph, 0, i3) == i3
     assert hw1.shortest_path(test_graph, 0, half_n) == half_n
-    assert hw1.shortest_path(test_graph, 0, n - i3) == i3
+    assert hw1.shortest_path(test_graph, 0, num_of_nodes - i3) == i3
     print("tested test_shortest_path")
 
 
-def test_create_graph_with_p(n, p):
-    testGraph2 = hw1.create_graph(n, p)
-    outboundNode1List = testGraph2.edges_from(1)
-    assert len(
-        outboundNode1List) > 2  # With very, very small probability this test will fail even for correct implementation
+@pytest.mark.parametrize("n,p", [(100, 0.5)])
+def test_create_graph_with_p(n: int, p: float):
+    graph = hw1.create_graph(n, p)
+    outbound_node1_list = graph.edges_from(1)
+    # With very, very small probability this test will fail even for correct implementation
+    assert len(outbound_node1_list) > 2
 
 
-test_number_of_nodes()
-test_empty_graph()
-test_edges_from_and_check_edge()
-test_shortest_path(10)
-test_avg_shortest_path(10)
-test_create_graph_with_p(100, 0.5)
-
-# Now, assuming that facebook_combined.txt is in the same directory as tester.py
-testFbGraph = hw1.create_fb_graph("facebook_combined.txt")
-assert testFbGraph.number_of_nodes() == 4039
-assert testFbGraph.check_edge(107, 1453) == True
-assert testFbGraph.check_edge(133, 800) == False
-
-print("all tests passed")
+def test_fb_graph():
+    # Now, assuming that facebook_combined.txt is in the same directory as tester.py
+    fb_graph = hw1.create_fb_graph()
+    assert fb_graph.number_of_nodes() == 4039
+    assert fb_graph.check_edge(107, 1453)
+    assert not fb_graph.check_edge(133, 800)
