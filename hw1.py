@@ -14,6 +14,7 @@ import random
 import matplotlib.pyplot as plt
 
 INFINITE_DISTANCE = -1
+FB_GRAPH_SIZE = 4039
 
 
 class Color:
@@ -132,7 +133,7 @@ def create_fb_graph(filename="facebook_combined.txt"):
     """ This method should return an undirected version of the
     facebook graph as an instance of the UndirectedGraph class.
     You may assume that the input graph has 4039 nodes."""
-    fb_G = UndirectedGraph(4039)
+    fb_G = UndirectedGraph(FB_GRAPH_SIZE)
     for line in open(filename):
         u, v = line.split(" ")
         fb_G.add_edge(int(u), int(v))
@@ -141,7 +142,7 @@ def create_fb_graph(filename="facebook_combined.txt"):
 
 def question_9c():
     G_9c = create_graph(n=1000, p=0.1)
-    print(f"9c answer:{avg_shortest_path(G=G_9c)}")
+    print(f"9c answer = {avg_shortest_path(G=G_9c)}")
 
 
 def question_9d():
@@ -164,19 +165,29 @@ def question_9d():
 
 def question_10b():
     G_fb = create_fb_graph()
-    print("10b answer:")
-    print(avg_shortest_path(G=G_fb))
+    print(f"10b answer: {avg_shortest_path(G=G_fb)}")
 
 
-def question_10c():
+def _calculate_estimated_p():
     G_fb = create_fb_graph()
     n = G_fb.number_of_nodes()
     fb_edges = sum([1 if G_fb.check_edge(i, j) else 0 for i in range(n - 1) for j in range(i + 1, n)])
     max_edges = n * (n - 1) / 2
-    print(f"p = {fb_edges / max_edges}")
+    return fb_edges / max_edges
+
+
+def neighbors_per_node():
+    G_fb = create_fb_graph()
+    n = G_fb.number_of_nodes()
+    cnt_neighbors = sorted([sum([1 if G_fb.check_edge(i, j) else 0 for j in range(n)]) for i in range(n)])
+    print(cnt_neighbors)
+    return cnt_neighbors
+
+
+def question_10c():
+    print(f"10c answer = {_calculate_estimated_p()}")
 
 
 def question_10d():
-    G_tp = create_graph(4039, 0.010819963503439287)
-    print("10d answer")
-    print(avg_shortest_path(G=G_tp))
+    G_tp = create_graph(n=FB_GRAPH_SIZE, p=_calculate_estimated_p())
+    print(f"10d answer = {avg_shortest_path(G=G_tp)}")
