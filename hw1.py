@@ -171,13 +171,9 @@ def question_10b():
 def question_10c():
     G_fb = create_fb_graph()
     n = G_fb.number_of_nodes()
-    cnt = 0
-    for i in range(n - 1):
-        for j in range(i + 1, n):
-            if G_fb.check_edge(i, j):
-                cnt += 1
-    max_num_of_edges = n * (n - 1) / 2
-    return cnt / max_num_of_edges
+    fb_edges = sum([1 if G_fb.check_edge(i, j) else 0 for i in range(n - 1) for j in range(i + 1, n)])
+    max_edges = n * (n - 1) / 2
+    print(f"p = {fb_edges / max_edges}")
 
 
 def question_10d():
